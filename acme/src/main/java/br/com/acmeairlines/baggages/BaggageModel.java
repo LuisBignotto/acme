@@ -1,7 +1,6 @@
 package br.com.acmeairlines.baggages;
 
 import br.com.acmeairlines.flights.FlightModel;
-import br.com.acmeairlines.users.UserUpdateData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,17 +19,15 @@ public class BaggageModel {
     private String tag;
     private String color;
     private Double weight;
-    private String dimension;
     private String status; // Recebida, Despachada, Decolou... essas coisas
     private String lastSeenLocation;
     @ManyToOne
     private FlightModel flight;
-    public BaggageModel(BaggageData data) {
+    public BaggageModel(BaggageRegisterData data) {
         this.userId = data.userId();
         this.tag = data.tag();
         this.color = data.color();
         this.weight = data.weight();
-        this.dimension = data.dimension();
         this.status = data.status();
         this.lastSeenLocation = data.lastSeenLocation();
         this.flight = new FlightModel(data.flight());

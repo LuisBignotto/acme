@@ -64,14 +64,14 @@ public class UserController {
         return ResponseEntity.created(location).body(new UserDataRecord(user));
     }
 
-    @PutMapping
-    @Transactional
-    public ResponseEntity<UserModel> updateUser(@RequestBody @Valid UserUpdateData data) {
-        return repository.findById(data.id()).map(user -> {
-                    user.updateUser(data);
-                    return ResponseEntity.ok(user);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//    @PutMapping
+//    @Transactional
+//    public ResponseEntity<UserModel> updateUser(@RequestBody @Valid UserUpdateData data) {
+//        return repository.findById(data.id()).map(user -> {
+//                    user.updateUser(data);
+//                    return ResponseEntity.ok(user);
+//        }).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 
     @DeleteMapping("/{id}")
     @Transactional
