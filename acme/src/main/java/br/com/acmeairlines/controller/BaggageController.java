@@ -24,7 +24,7 @@ public class BaggageController {
         return ResponseEntity.ok(page);
     }
     @GetMapping("/{id}")
-    public ResponseEntity getFlightBaggage(@PathVariable Long id) {
+    public ResponseEntity getBaggage(@PathVariable Long id) {
         var page = repository.findById(id);
         return ResponseEntity.ok(page);
     }

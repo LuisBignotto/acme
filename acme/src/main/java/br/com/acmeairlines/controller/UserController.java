@@ -51,27 +51,27 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/create")
-    @Transactional
-    public ResponseEntity<UserDataRecord> cadastrar(@RequestBody @Valid UserRegisterData data) {
-        UserModel user = new UserModel(data);
-        user = repository.save(user);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(user.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(new UserDataRecord(user));
-    }
-
-//    @PutMapping
+//    @PostMapping("/register")
 //    @Transactional
-//    public ResponseEntity<UserModel> updateUser(@RequestBody @Valid UserUpdateData data) {
-//        return repository.findById(data.id()).map(user -> {
-//                    user.updateUser(data);
-//                    return ResponseEntity.ok(user);
-//        }).orElseGet(() -> ResponseEntity.notFound().build());
+//    public ResponseEntity<UserDataRecord> cadastrar(@RequestBody @Valid UserRegisterData data) {
+//        UserModel user = new UserModel(data);
+//        user = repository.save(user);
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(user.getId())
+//                .toUri();
+//        return ResponseEntity.created(location).body(new UserDataRecord(user));
 //    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<UserModel> updateUser(@RequestBody @Valid UserUpdateData data) {
+        return repository.findById(data.id()).map(user -> {
+                    user.updateUser(data);
+                    return ResponseEntity.ok(user);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/{id}")
     @Transactional

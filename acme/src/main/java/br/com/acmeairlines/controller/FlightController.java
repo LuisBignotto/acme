@@ -28,7 +28,7 @@ public class FlightController {
     }
     @GetMapping("/flights/{id}")
     public ResponseEntity<List<BaggageModel>> getFlightBaggages(@PathVariable Long id) {
-        var page = repositoryBaggage.findByFlight(id);
+        var page = repositoryBaggage.findByFlightId(id);
         return ResponseEntity.ok(page);
     }
     @PostMapping("/create")

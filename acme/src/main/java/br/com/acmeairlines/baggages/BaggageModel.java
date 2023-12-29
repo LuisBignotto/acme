@@ -21,8 +21,7 @@ public class BaggageModel {
     private Double weight;
     private String status; // Recebida, Despachada, Decolou... essas coisas
     private String lastSeenLocation;
-    @ManyToOne
-    private FlightModel flight;
+    private Long flightId;
     public BaggageModel(BaggageRegisterData data) {
         this.userId = data.userId();
         this.tag = data.tag();
@@ -30,7 +29,7 @@ public class BaggageModel {
         this.weight = data.weight();
         this.status = data.status();
         this.lastSeenLocation = data.lastSeenLocation();
-        this.flight = new FlightModel(data.flight());
+        this.flightId = data.flightId();
     }
     public void updateBaggage(BaggageUpdateData data) {
         if (data.status() != null) {
@@ -39,8 +38,8 @@ public class BaggageModel {
         if (data.lastSeenLocation() != null) {
             this.lastSeenLocation = data.lastSeenLocation();
         }
-        if (data.flight() != null) {
-            this.flight.updateFlight(data.flight());
+        if (data.flightId() != null) {
+            this.flightId = data.flightId();
         }
     }
 }
