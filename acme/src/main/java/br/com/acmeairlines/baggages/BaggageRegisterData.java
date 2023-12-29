@@ -18,8 +18,7 @@ public record BaggageRegisterData(
         String status,
         @NotBlank(message = "O último local não pode estar vazio.")
         String lastSeenLocation,
-        @Valid
         @NotNull(message = "O voo não pode estar vazio.")
-        FlightData flight
+        Long flightId
 ) {
 }

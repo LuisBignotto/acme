@@ -10,6 +10,6 @@ public record BaggageUpdateData(
         Long id,
         String status,
         String lastSeenLocation,
-        FlightUpdateData flight
+        Long flightId
 ) {
 }

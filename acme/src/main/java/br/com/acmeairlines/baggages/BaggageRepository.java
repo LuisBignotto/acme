@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface BaggageRepository extends JpaRepository<BaggageModel, Long> {
     BaggageModel findByUserId(Long id);
-    List<BaggageModel> findByFlight(Long id);
+    List<BaggageModel> findByFlightId(Long id);
 }
