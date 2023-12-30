@@ -29,7 +29,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
+                        .requestMatchers("/admin").hasAuthority("ADMIN")
+                        .requestMatchers("/support").hasAuthority("SUPPORT")
+                        .requestMatchers("/supervisor").hasAuthority("BAGGAGE_SUPERVISOR")
+                        .requestMatchers("/baggage-register").hasAuthority("BAGGAGE_REGISTER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -15,25 +15,24 @@ CREATE TABLE users (
                        role VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE flight (
-                        id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                        flightNumber VARCHAR(255) NOT NULL,
-                        departureDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                        arrivalDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                        departureAirport VARCHAR(255) NOT NULL,
-                        arrivalAirport VARCHAR(255) NOT NULL
+CREATE TABLE flights (
+                         id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                         flightNumber VARCHAR(255) NOT NULL,
+                         departureDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                         arrivalDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                         departureAirport VARCHAR(255) NOT NULL,
+                         arrivalAirport VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE baggage (
-                         id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                         userId BIGINT NOT NULL,
-                         tag VARCHAR(255) NOT NULL,
-                         color VARCHAR(255) NOT NULL,
-                         weight DOUBLE NOT NULL,
-                         dimension VARCHAR(255),
-                         status VARCHAR(255) NOT NULL,
-                         lastSeenLocation VARCHAR(255) NOT NULL,
-                         flight BIGINT NOT NULL,
-                         FOREIGN KEY (flight) REFERENCES flight (id),
-                         FOREIGN KEY (userId) REFERENCES users (id)
+CREATE TABLE baggages (
+                          id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                          userId BIGINT NOT NULL,
+                          tag VARCHAR(255) NOT NULL,
+                          color VARCHAR(255) NOT NULL,
+                          weight DOUBLE NOT NULL,
+                          status VARCHAR(255) NOT NULL,
+                          lastSeenLocation VARCHAR(255) NOT NULL,
+                          flightId BIGINT NOT NULL,
+                          FOREIGN KEY (flightId) REFERENCES flights (id),
+                          FOREIGN KEY (userId) REFERENCES users (id)
 );
