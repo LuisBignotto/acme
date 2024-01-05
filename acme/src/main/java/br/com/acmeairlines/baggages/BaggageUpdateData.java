@@ -6,8 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record BaggageUpdateData(
-        @NotNull
-        Long id,
         String status,
         String lastSeenLocation,
         Long flightId

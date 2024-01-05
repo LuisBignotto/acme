@@ -11,11 +11,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("baggages")
+@RequestMapping("baggage")
 public class BaggageRegisterController {
     @Autowired
     private BaggageRepository baggageRepository;
-
     @PostMapping("/create")
     @Transactional
     public ResponseEntity<BaggageDataRecord> registerBaggage(@RequestBody @Valid BaggageRegisterData data) {
@@ -28,10 +27,15 @@ public class BaggageRegisterController {
                 .toUri();
         return ResponseEntity.created(location).body(new BaggageDataRecord(baggage));
     }
-    @PutMapping
+    @GetMapping("/{id}")
+    public ResponseEntity getBaggage(@PathVariable Long id) {
+        var page = baggageRepository.findById(id);
+        return ResponseEntity.ok(page);
+    }
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<BaggageModel> updateUser(@RequestBody @Valid BaggageUpdateData data) {
-        return baggageRepository.findById(data.id()).map(user -> {
+    public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateData data, @PathVariable Long id) {
+        return baggageRepository.findById(id).map(user -> {
             user.updateBaggage(data);
             return ResponseEntity.ok(user);
         }).orElseGet(() -> ResponseEntity.notFound().build());
