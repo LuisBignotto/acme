@@ -2,10 +2,7 @@ package br.com.acmeairlines.controller.admin;
 
 import br.com.acmeairlines.baggages.BaggageModel;
 import br.com.acmeairlines.baggages.BaggageRepository;
-import br.com.acmeairlines.flights.FlightData;
-import br.com.acmeairlines.flights.FlightDataRecord;
-import br.com.acmeairlines.flights.FlightModel;
-import br.com.acmeairlines.flights.FlightRepository;
+import br.com.acmeairlines.flights.*;
 import br.com.acmeairlines.users.UserDataRecord;
 import br.com.acmeairlines.users.UserModel;
 import br.com.acmeairlines.users.UserRegisterData;
@@ -39,7 +36,6 @@ public class AdminController {
         var page = userRepository.findByActive(true, pages).map(UserDataRecord::new);
         return ResponseEntity.ok(page);
     }
-
     @GetMapping("/users/inactive")
     public ResponseEntity<Page<UserDataRecord>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
         var page = userRepository.findByActive(false, pages).map(UserDataRecord::new);
@@ -55,10 +51,9 @@ public class AdminController {
         var page = baggageRepository.findByFlightId(id);
         return ResponseEntity.ok(page);
     }
-
     @PostMapping("/create-flight")
     @Transactional
-    public ResponseEntity<FlightDataRecord> registerFlight(@RequestBody @Valid FlightData data) {
+    public ResponseEntity<FlightDataRecord> createFlight(@RequestBody @Valid FlightData data) {
         FlightModel flight = new FlightModel(data);
         flight = flightRepository.save(flight);
         URI location = ServletUriComponentsBuilder
@@ -67,6 +62,14 @@ public class AdminController {
                 .buildAndExpand(flight.getId())
                 .toUri();
         return ResponseEntity.created(location).body(new FlightDataRecord(flight));
+    }
+    @PutMapping
+    @Transactional
+    public ResponseEntity<FlightModel> updateFlight(@RequestBody @Valid FlightUpdateData data) {
+        return flightRepository.findById(data.id()).map(user -> {
+            user.updateFlight(data);
+            return ResponseEntity.ok(user);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping("/register")
     @Transactional
