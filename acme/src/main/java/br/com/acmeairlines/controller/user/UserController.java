@@ -1,5 +1,6 @@
 package br.com.acmeairlines.controller.user;
 
+import br.com.acmeairlines.address.Address;
 import br.com.acmeairlines.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -52,6 +52,9 @@ public class UserModel implements UserDetails {
             this.phone = data.phone();
         }
         if (data.address() != null) {
+            if(this.address == null){
+                this.address = new Address(data.address());
+            }
             this.address.updateAddress(data.address());
         }
     }
