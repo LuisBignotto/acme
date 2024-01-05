@@ -1,13 +1,10 @@
 package br.com.acmeairlines.controller.user;
 
-import br.com.acmeairlines.address.Address;
 import br.com.acmeairlines.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +32,11 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @Transactional
-    public ResponseEntity deleteUser(@PathVariable Long id){
-        return repository.findById(id).map(user -> {
-            repository.delete(user);
-            return ResponseEntity.noContent().build();
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity deleteUser(HttpServletRequest request){
+        var user = (UserModel) repository.findUserByEmail(request.getRemoteUser());
+        repository.delete(user);
+        return ResponseEntity.noContent().build();
     }
 }
