@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("baggage")
+@RequestMapping("/baggage-register/baggage")
 public class BaggageRegisterController {
     @Autowired
     private BaggageRepository baggageRepository;

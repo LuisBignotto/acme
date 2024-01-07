@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("baggages")
+@RequestMapping("supervisor/baggages")
 public class BaggageSupervisorController {
     @Autowired
     private BaggageRepository baggageRepository;
