@@ -5,5 +5,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FlightRepository extends JpaRepository<FlightModel, Long> {
-    Page<FlightDataRecord> findById(Pageable pageable);
+    Page<FlightModel> findAll(Pageable pageable);
 }

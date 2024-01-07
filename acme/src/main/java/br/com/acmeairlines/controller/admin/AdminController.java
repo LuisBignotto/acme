@@ -42,8 +42,8 @@ public class AdminController {
         return ResponseEntity.ok(page);
     }
     @GetMapping("/flights")
-    public ResponseEntity<Page<FlightDataRecord>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
-        var page = flightRepository.findById(pages);
+    public ResponseEntity<Page<FlightModel>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
+        var page = flightRepository.findAll(pages);
         return ResponseEntity.ok(page);
     }
     @GetMapping("/flights/{id}")
@@ -63,17 +63,17 @@ public class AdminController {
                 .toUri();
         return ResponseEntity.created(location).body(new FlightDataRecord(flight));
     }
-    @PutMapping
+    @PutMapping("/flights/{id}")
     @Transactional
-    public ResponseEntity<FlightModel> updateFlight(@RequestBody @Valid FlightUpdateData data) {
-        return flightRepository.findById(data.id()).map(user -> {
+    public ResponseEntity<FlightModel> updateFlight(@PathVariable Long id, @RequestBody @Valid FlightUpdateData data) {
+        return flightRepository.findById(id).map(user -> {
             user.updateFlight(data);
             return ResponseEntity.ok(user);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @PostMapping("/register")
+    @PostMapping("/register-worker")
     @Transactional
-    public ResponseEntity register(@RequestBody @Valid UserRegisterData data){
+    public ResponseEntity registerWorker(@RequestBody @Valid UserRegisterData data){
         if(this.userRepository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());

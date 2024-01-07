@@ -17,22 +17,22 @@ CREATE TABLE users (
 
 CREATE TABLE flights (
                          id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                         flightNumber VARCHAR(255) NOT NULL,
-                         departureDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                         arrivalDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                         departureAirport VARCHAR(255) NOT NULL,
-                         arrivalAirport VARCHAR(255) NOT NULL
+                         flight_number VARCHAR(255) NOT NULL,
+                         departure_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                         arrival_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                         departure_airport VARCHAR(255) NOT NULL,
+                         arrival_airport VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE baggages (
                           id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                          userId BIGINT NOT NULL,
+                          user_id BIGINT NOT NULL,
                           tag VARCHAR(255) NOT NULL,
                           color VARCHAR(255) NOT NULL,
                           weight DOUBLE NOT NULL,
                           status VARCHAR(255) NOT NULL,
-                          lastSeenLocation VARCHAR(255) NOT NULL,
-                          flightId BIGINT NOT NULL,
-                          FOREIGN KEY (flightId) REFERENCES flights (id),
-                          FOREIGN KEY (userId) REFERENCES users (id)
+                          last_seen_location VARCHAR(255) NOT NULL,
+                          flight_id BIGINT NOT NULL,
+                          FOREIGN KEY (flight_id) REFERENCES flights (id),
+                          FOREIGN KEY (user_id) REFERENCES users (id)
 );
