@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/support/**").hasAnyAuthority("SUPPORT", "ADMINISTRATOR", "REGULAR_USER")
                         .requestMatchers("/supervisor/**").hasAnyAuthority("BAGGAGE_SUPERVISOR", "ADMINISTRATOR")
                         .requestMatchers("/baggage-register/**").hasAnyAuthority("BAGGAGE_REGISTER", "ADMINISTRATOR")
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
