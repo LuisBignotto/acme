@@ -4,7 +4,6 @@ import br.com.acmeairlines.domain.users.UserDataRecord;
 import br.com.acmeairlines.domain.users.UserModel;
 import br.com.acmeairlines.domain.users.UserRepository;
 import br.com.acmeairlines.domain.users.UserUpdateData;
-import br.com.acmeairlines.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

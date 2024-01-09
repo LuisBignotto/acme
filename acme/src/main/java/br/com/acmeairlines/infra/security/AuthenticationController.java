@@ -1,7 +1,6 @@
 package br.com.acmeairlines.infra.security;
 
 import br.com.acmeairlines.domain.users.*;
-import br.com.acmeairlines.users.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

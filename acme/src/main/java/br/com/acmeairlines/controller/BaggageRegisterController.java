@@ -1,6 +1,5 @@
 package br.com.acmeairlines.controller;
 
-import br.com.acmeairlines.baggages.*;
 import br.com.acmeairlines.domain.baggages.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

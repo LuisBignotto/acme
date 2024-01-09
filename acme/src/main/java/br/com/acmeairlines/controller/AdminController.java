@@ -3,7 +3,6 @@ package br.com.acmeairlines.controller;
 import br.com.acmeairlines.domain.baggages.BaggageModel;
 import br.com.acmeairlines.domain.baggages.BaggageRepository;
 import br.com.acmeairlines.domain.flights.*;
-import br.com.acmeairlines.flights.*;
 import br.com.acmeairlines.domain.users.UserDataRecord;
 import br.com.acmeairlines.domain.users.UserModel;
 import br.com.acmeairlines.domain.users.UserRegisterData;
