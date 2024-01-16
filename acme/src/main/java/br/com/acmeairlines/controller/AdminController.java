@@ -62,7 +62,6 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
-
     @PostMapping("/create-flight")
     @Transactional
     public ResponseEntity<FlightDataRecord> createFlight(@RequestBody @Valid FlightData data) {
