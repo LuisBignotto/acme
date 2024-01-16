@@ -71,7 +71,7 @@ public class UserController {
                 }
             }
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping
