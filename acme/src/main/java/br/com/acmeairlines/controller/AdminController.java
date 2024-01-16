@@ -7,6 +7,7 @@ import br.com.acmeairlines.domain.users.UserDataRecord;
 import br.com.acmeairlines.domain.users.UserModel;
 import br.com.acmeairlines.domain.users.UserRegisterData;
 import br.com.acmeairlines.domain.users.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("admin")
@@ -51,6 +53,15 @@ public class AdminController {
         var page = baggageRepository.findByFlightId(id);
         return ResponseEntity.ok(page);
     }
+    @GetMapping("/baggage/{id}")
+    public ResponseEntity getBaggage(@PathVariable Long id) {
+        var baggage = baggageRepository.findById(id);
+        if(baggage != null) {
+            return ResponseEntity.ok(baggage);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping("/create-flight")
     @Transactional
     public ResponseEntity<FlightDataRecord> createFlight(@RequestBody @Valid FlightData data) {

@@ -59,8 +59,6 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-
-
     @PutMapping("/update")
     @Transactional
     public ResponseEntity updateUser(HttpServletRequest request, @RequestBody @Valid UserUpdateData data) {
