@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface BaggageRepository extends JpaRepository<BaggageModel, Long> {
-    BaggageModel findByUserId(Long id);
+    List<BaggageModel> findByUserId(Long id);
     List<BaggageModel> findByFlightId(Long id);
 }

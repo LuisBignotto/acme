@@ -1,10 +1,7 @@
 package br.com.acmeairlines.controller;
 
 import br.com.acmeairlines.domain.baggages.BaggageRepository;
-import br.com.acmeairlines.domain.users.UserDataRecord;
-import br.com.acmeairlines.domain.users.UserModel;
-import br.com.acmeairlines.domain.users.UserRepository;
-import br.com.acmeairlines.domain.users.UserUpdateData;
+import br.com.acmeairlines.domain.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +17,16 @@ public class UserController {
     @Autowired
     private BaggageRepository baggageRepository;
     @GetMapping
-    public ResponseEntity getUser(HttpServletRequest request) {
-        var user = (UserDataRecord) repository.findUserDataRecordByEmail(request.getRemoteUser());
-        if(user != null) {
-            return ResponseEntity.ok(user);
+    public ResponseEntity<UserAndBaggageResponse> getUser(HttpServletRequest request) {
+        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+        if (user != null) {
+            var baggage = baggageRepository.findByUserId(user.id());
+            var response = new UserAndBaggageResponse(user, baggage);
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
     }
+
     @GetMapping("/baggage/{id}")
     public ResponseEntity getBaggage(@PathVariable Long id) {
         var baggage = baggageRepository.findById(id);
