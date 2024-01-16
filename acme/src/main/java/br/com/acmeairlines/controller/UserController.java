@@ -43,7 +43,6 @@ public class UserController {
                 }
             }
         }
-
         return ResponseEntity.notFound().build();
     }
     @PutMapping("/update")
@@ -67,7 +66,7 @@ public class UserController {
                 List<BaggageModel> userBaggages = baggage.stream().filter(b -> b.getUserId() == user.id()).filter(b -> b.getId() == id).collect(Collectors.toList());
                 if(!userBaggages.isEmpty()){
                     baggageRepository.deleteById(id);
-                    return ResponseEntity.ok().build();
+                    return ResponseEntity.noContent().build();
                 }
             }
         }
