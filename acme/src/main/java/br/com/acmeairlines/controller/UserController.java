@@ -1,5 +1,6 @@
 package br.com.acmeairlines.controller;
 
+import br.com.acmeairlines.domain.baggages.BaggageModel;
 import br.com.acmeairlines.domain.baggages.BaggageRepository;
 import br.com.acmeairlines.domain.users.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
@@ -28,11 +32,18 @@ public class UserController {
     }
 
     @GetMapping("/baggage/{id}")
-    public ResponseEntity getBaggage(@PathVariable Long id) {
-        var baggage = baggageRepository.findById(id);
-        if(baggage != null) {
-            return ResponseEntity.ok(baggage);
+    public ResponseEntity getBaggage(HttpServletRequest request, @PathVariable Long id) {
+        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+        if (user != null){
+            var baggage = baggageRepository.findById(id);
+            if(baggage != null) {
+                List<BaggageModel> userBaggages = baggage.stream().filter(b -> b.getUserId() == user.id()).collect(Collectors.toList());
+                if(!baggage.isEmpty()){
+                    return ResponseEntity.ok(userBaggages);
+                }
+            }
         }
+
         return ResponseEntity.notFound().build();
     }
     @PutMapping("/update")
@@ -48,12 +59,18 @@ public class UserController {
 
     @DeleteMapping("/baggage/{id}")
     @Transactional
-    public ResponseEntity<String> deleteBag(@PathVariable Long id) {
-        boolean exists = baggageRepository.existsById(id);
-        if (!exists) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity deleteBag(HttpServletRequest request, @PathVariable Long id) {
+        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+        if(user != null) {
+            var baggage = baggageRepository.findById(id);
+            if(baggage != null) {
+                List<BaggageModel> userBaggages = baggage.stream().filter(b -> b.getUserId() == user.id()).filter(b -> b.getId() == id).collect(Collectors.toList());
+                if(!userBaggages.isEmpty()){
+                    baggageRepository.deleteById(id);
+                    return ResponseEntity.ok().build();
+                }
+            }
         }
-        baggageRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
