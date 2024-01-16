@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,9 +56,9 @@ public class AdminController {
     }
     @GetMapping("/baggage/{id}")
     public ResponseEntity getBaggage(@PathVariable Long id) {
-        var baggage = baggageRepository.findById(id);
-        if(baggage != null) {
-            return ResponseEntity.ok(baggage);
+        Optional<BaggageModel> baggage = baggageRepository.findById(id);
+        if (baggage.isPresent()) {
+            return ResponseEntity.ok(baggage.get());
         }
         return ResponseEntity.notFound().build();
     }
