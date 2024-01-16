@@ -31,6 +31,9 @@ public class BaggageModel {
         this.flightId = data.flightId();
     }
     public void updateBaggage(BaggageUpdateData data) {
+        if (data.userId() != null) {
+            this.userId = data.userId();
+        }
         if (data.status() != null) {
             this.status = data.status();
         }

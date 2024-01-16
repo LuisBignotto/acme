@@ -1,15 +1,17 @@
 package br.com.acmeairlines.controller;
 
-import br.com.acmeairlines.domain.baggages.BaggageModel;
-import br.com.acmeairlines.domain.baggages.BaggageRepository;
+import br.com.acmeairlines.domain.baggages.*;
 import br.com.acmeairlines.domain.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,20 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/add/baggage")
+    public ResponseEntity addBaggage(@RequestBody @Valid BaggageUpdateRequest updateRequest) {
+        BaggageModel baggage = baggageRepository.findByTag(updateRequest.getTag());
+        if(baggage != null){
+            baggage.updateBaggage(updateRequest.getData());
+            baggageRepository.save(baggage);
+            return ResponseEntity.ok(baggage);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+
     @PutMapping("/update")
     @Transactional
     public ResponseEntity updateUser(HttpServletRequest request, @RequestBody @Valid UserUpdateData data) {
