@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<UserModel, Long> {
     Page<UserModel> findByActive(Boolean active, Pageable pageable);
-    List<UserModel> findByRole(Role role);
     UserModel findUserByEmail(String email);
     UserDataRecord findUserDataRecordByEmail(String email);
     UserDetails findByEmail(String login);
