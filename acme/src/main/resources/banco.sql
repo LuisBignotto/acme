@@ -1,3 +1,7 @@
+CREATE DATABASE acme;
+
+USE acme;
+
 CREATE TABLE users (
                        id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                        name VARCHAR(255) NOT NULL,
