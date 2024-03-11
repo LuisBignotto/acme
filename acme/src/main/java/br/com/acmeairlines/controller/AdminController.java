@@ -39,21 +39,25 @@ public class AdminController {
         var page = userRepository.findByActive(true, pages).map(UserDataRecord::new);
         return ResponseEntity.ok(page);
     }
+
     @GetMapping("/users/inactive")
     public ResponseEntity<Page<UserDataRecord>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
         var page = userRepository.findByActive(false, pages).map(UserDataRecord::new);
         return ResponseEntity.ok(page);
     }
+
     @GetMapping("/flights")
     public ResponseEntity<Page<FlightModel>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
         var page = flightRepository.findAll(pages);
         return ResponseEntity.ok(page);
     }
+
     @GetMapping("/flights/{id}")
     public ResponseEntity<List<BaggageModel>> getFlightBaggages(@PathVariable Long id) {
         var page = baggageRepository.findByFlightId(id);
         return ResponseEntity.ok(page);
     }
+
     @GetMapping("/baggage/{id}")
     public ResponseEntity getBaggage(@PathVariable Long id) {
         Optional<BaggageModel> baggage = baggageRepository.findById(id);
@@ -62,6 +66,7 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+
     @PostMapping("/create-flight")
     @Transactional
     public ResponseEntity<FlightDataRecord> createFlight(@RequestBody @Valid FlightData data) {
@@ -74,6 +79,7 @@ public class AdminController {
                 .toUri();
         return ResponseEntity.created(location).body(new FlightDataRecord(flight));
     }
+
     @PutMapping("/flights/{id}")
     @Transactional
     public ResponseEntity<FlightModel> updateFlight(@PathVariable Long id, @RequestBody @Valid FlightUpdateData data) {
@@ -82,6 +88,7 @@ public class AdminController {
             return ResponseEntity.ok(user);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @PostMapping("/register-worker")
     @Transactional
     public ResponseEntity registerWorker(@RequestBody @Valid UserRegisterData data){
