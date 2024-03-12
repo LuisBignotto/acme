@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("users")
 public class UserController {
+    
     @Autowired
     private UserRepository repository;
     @Autowired

@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("supervisor/baggages")
 public class BaggageSupervisorController {
+
     @Autowired
     private BaggageRepository baggageRepository;
+
     @GetMapping("/{id}")
     public ResponseEntity getBaggage(@PathVariable Long id) {
         var page = baggageRepository.findById(id);
         return ResponseEntity.ok(page);
     }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateData data, @PathVariable Long id) {

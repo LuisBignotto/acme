@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("admin")
 public class AdminController {
+
     @Autowired
     private UserRepository userRepository;
     @Autowired

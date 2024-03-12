@@ -13,8 +13,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/baggage-register/baggage")
 public class BaggageRegisterController {
+
     @Autowired
     private BaggageRepository baggageRepository;
+
     @PostMapping("/create")
     @Transactional
     public ResponseEntity<BaggageDataRecord> registerBaggage(@RequestBody @Valid BaggageRegisterData data) {
@@ -27,11 +29,13 @@ public class BaggageRegisterController {
                 .toUri();
         return ResponseEntity.created(location).body(new BaggageDataRecord(baggage));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity getBaggage(@PathVariable Long id) {
         var page = baggageRepository.findById(id);
         return ResponseEntity.ok(page);
     }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateData data, @PathVariable Long id) {
@@ -40,6 +44,7 @@ public class BaggageRegisterController {
             return ResponseEntity.ok(user);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity deleteBaggage(@PathVariable Long id){
