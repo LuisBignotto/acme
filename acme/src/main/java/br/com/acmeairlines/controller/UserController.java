@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("users")
 public class UserController {
-    
+
     @Autowired
     private UserRepository repository;
     @Autowired
     private BaggageRepository baggageRepository;
+
     @GetMapping
     public ResponseEntity<UserAndBaggageResponse> getUser(HttpServletRequest request) {
         var user = repository.findUserDataRecordByEmail(request.getRemoteUser());

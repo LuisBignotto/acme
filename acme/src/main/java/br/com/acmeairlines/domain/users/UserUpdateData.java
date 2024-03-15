@@ -8,4 +8,4 @@ public record UserUpdateData(
         String password,
         String phone,
         AddressData address
-) { }
+) {}

@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Table(name = "baggages")
 @Entity(name = "baggages")
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaggageModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +24,7 @@ public class BaggageModel {
     private String status; // Recebida, Despachada, Decolou... essas coisas
     private String lastSeenLocation;
     private Long flightId;
+
     public BaggageModel(BaggageRegisterData data) {
         this.userId = data.userId();
         this.tag = data.tag();
@@ -30,6 +34,7 @@ public class BaggageModel {
         this.lastSeenLocation = data.lastSeenLocation();
         this.flightId = data.flightId();
     }
+
     public void updateBaggage(BaggageUpdateData data) {
         if (data.userId() != null) {
             this.userId = data.userId();

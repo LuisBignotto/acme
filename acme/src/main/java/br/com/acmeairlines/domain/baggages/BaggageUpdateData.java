@@ -5,5 +5,4 @@ public record BaggageUpdateData(
         String status,
         String lastSeenLocation,
         Long flightId
-) {
-}
+) {}

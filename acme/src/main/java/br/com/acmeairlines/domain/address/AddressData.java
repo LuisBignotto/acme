@@ -8,4 +8,4 @@ public record AddressData(
         String complement,
         String city,
         String state
-        ) { }
+) {}
