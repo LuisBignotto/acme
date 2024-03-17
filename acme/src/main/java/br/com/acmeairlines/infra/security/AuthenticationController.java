@@ -1,6 +1,11 @@
 package br.com.acmeairlines.infra.security;
 
-import br.com.acmeairlines.domain.users.*;
+import br.com.acmeairlines.domain.users.dto.AuthenticationDTO;
+import br.com.acmeairlines.domain.users.dto.LoginResponseDTO;
+import br.com.acmeairlines.domain.users.model.UserModel;
+import br.com.acmeairlines.domain.users.dto.UserRegisterDTO;
+import br.com.acmeairlines.domain.users.repository.UserRepository;
+import br.com.acmeairlines.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository repository;
+    private UserService userService;
     @Autowired
     private TokenService tokenService;
 
@@ -36,13 +41,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity register(@RequestBody @Valid UserRegisterData data){
-        if(this.repository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserModel newUser = new UserModel(data.name(), data.email(), encryptedPassword, data.role(), data.active());
-
-        this.repository.save(newUser);
+    public ResponseEntity register(@RequestBody @Valid UserRegisterDTO data){
+        UserModel newUser = userService.createUser(data);
 
         return ResponseEntity.ok().build();
     }

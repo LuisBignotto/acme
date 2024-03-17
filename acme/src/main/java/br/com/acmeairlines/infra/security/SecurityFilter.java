@@ -1,6 +1,6 @@
 package br.com.acmeairlines.infra.security;
 
-import br.com.acmeairlines.domain.users.UserRepository;
+import br.com.acmeairlines.domain.users.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,105 +1,104 @@
 package br.com.acmeairlines.controller;
 
-import br.com.acmeairlines.domain.baggages.BaggageModel;
-import br.com.acmeairlines.domain.baggages.BaggageRepository;
-import br.com.acmeairlines.domain.flights.*;
-import br.com.acmeairlines.domain.users.UserDataRecord;
-import br.com.acmeairlines.domain.users.UserModel;
-import br.com.acmeairlines.domain.users.UserRegisterData;
-import br.com.acmeairlines.domain.users.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import br.com.acmeairlines.domain.baggages.model.BaggageModel;
+import br.com.acmeairlines.domain.baggages.service.BaggageService;
+import br.com.acmeairlines.domain.flights.dto.FlightDataDTO;
+import br.com.acmeairlines.domain.flights.dto.FlightUpdateDTO;
+import br.com.acmeairlines.domain.flights.model.FlightModel;
+import br.com.acmeairlines.domain.flights.service.FlightService;
+import br.com.acmeairlines.domain.users.dto.UserDataDTO;
+import br.com.acmeairlines.domain.users.dto.UserRegisterDTO;
+import br.com.acmeairlines.domain.users.model.UserModel;
+import br.com.acmeairlines.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("admin")
 public class AdminController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
     @Autowired
-    private FlightRepository flightRepository;
+    private FlightService flightService;
+
     @Autowired
-    private BaggageRepository baggageRepository;
+    private BaggageService baggageService;
 
     @GetMapping("/users/active")
-    public ResponseEntity<Page<UserDataRecord>> getActiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
-        var page = userRepository.findByActive(true, pages).map(UserDataRecord::new);
+    public ResponseEntity<Page<UserDataDTO>> getActiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
+        Page<UserDataDTO> page = userService.findActiveUsers(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/users/inactive")
-    public ResponseEntity<Page<UserDataRecord>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
-        var page = userRepository.findByActive(false, pages).map(UserDataRecord::new);
+    public ResponseEntity<Page<UserDataDTO>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
+        Page<UserDataDTO> page = userService.findInactiveUsers(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/flights")
     public ResponseEntity<Page<FlightModel>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
-        var page = flightRepository.findAll(pages);
+        Page<FlightModel> page = flightService.findAllFlights(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/flights/{id}")
-    public ResponseEntity<List<BaggageModel>> getFlightBaggages(@PathVariable Long id) {
-        var page = baggageRepository.findByFlightId(id);
-        return ResponseEntity.ok(page);
+    public ResponseEntity<List<BaggageModel>> getFlightBaggages(@PathVariable String id) {
+        List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
+        return ResponseEntity.ok(baggages);
     }
 
     @GetMapping("/baggage/{id}")
-    public ResponseEntity getBaggage(@PathVariable Long id) {
-        Optional<BaggageModel> baggage = baggageRepository.findById(id);
-        if (baggage.isPresent()) {
-            return ResponseEntity.ok(baggage.get());
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<BaggageModel> getBaggage(@PathVariable String id) {
+        BaggageModel baggage = baggageService.findById(id);
+        return ResponseEntity.ok(baggage);
     }
 
     @PostMapping("/create-flight")
     @Transactional
-    public ResponseEntity<FlightDataRecord> createFlight(@RequestBody @Valid FlightData data) {
-        FlightModel flight = new FlightModel(data);
-        flight = flightRepository.save(flight);
+    public ResponseEntity<FlightModel> createFlight(@RequestBody @Valid FlightDataDTO data) {
+        FlightModel flight = flightService.createFlight(data);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(flight.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(new FlightDataRecord(flight));
+
+        return ResponseEntity.created(location).body(flight);
     }
 
     @PutMapping("/flights/{id}")
     @Transactional
-    public ResponseEntity<FlightModel> updateFlight(@PathVariable Long id, @RequestBody @Valid FlightUpdateData data) {
-        return flightRepository.findById(id).map(user -> {
-            user.updateFlight(data);
-            return ResponseEntity.ok(user);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<FlightModel> updateFlight(@PathVariable String id, @RequestBody @Valid FlightUpdateDTO data) {
+        FlightModel updatedFlight = flightService.updateFlight(data, id);
+        return ResponseEntity.ok(updatedFlight);
     }
 
     @PostMapping("/register-worker")
     @Transactional
-    public ResponseEntity registerWorker(@RequestBody @Valid UserRegisterData data){
-        if(this.userRepository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<UserDataDTO> registerWorker(@RequestBody @Valid UserRegisterDTO data){
+        UserDataDTO user = userService.findByEmail(data.email());
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserModel newUser = new UserModel(data.name(), data.email(), encryptedPassword, data.role(), data.active());
+        if(user != null) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        this.userRepository.save(newUser);
+        UserModel newUser = userService.createUser(data);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new UserDataDTO(newUser), HttpStatus.CREATED);
     }
 }

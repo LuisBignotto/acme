@@ -1,6 +1,12 @@
 package br.com.acmeairlines.controller;
 
-import br.com.acmeairlines.domain.baggages.*;
+import br.com.acmeairlines.domain.baggages.dto.BaggageDTO;
+import br.com.acmeairlines.domain.baggages.dto.BaggageUpdateDTO;
+import br.com.acmeairlines.domain.baggages.model.BaggageModel;
+import br.com.acmeairlines.domain.baggages.service.BaggageService;
+import br.com.acmeairlines.domain.users.dto.UserDataDTO;
+import br.com.acmeairlines.domain.users.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,42 +21,39 @@ import java.net.URI;
 public class BaggageRegisterController {
 
     @Autowired
-    private BaggageRepository baggageRepository;
+    private UserService userService;
+
+    @Autowired
+    private BaggageService baggageService;
 
     @PostMapping("/create")
     @Transactional
-    public ResponseEntity<BaggageDataRecord> registerBaggage(@RequestBody @Valid BaggageRegisterData data) {
-        BaggageModel baggage = new BaggageModel(data);
-        baggage = baggageRepository.save(baggage);
+    public ResponseEntity<BaggageModel> registerBaggage(@RequestBody @Valid BaggageDTO data) {
+        BaggageModel baggage = baggageService.registerBaggage(data);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(baggage.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(new BaggageDataRecord(baggage));
+        return ResponseEntity.created(location).body(baggage);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getBaggage(@PathVariable Long id) {
-        var page = baggageRepository.findById(id);
-        return ResponseEntity.ok(page);
+    public ResponseEntity<BaggageModel> getBaggage(@PathVariable String id) {
+        BaggageModel baggage = baggageService.findById(id);
+        if(baggage != null) {
+            return ResponseEntity.ok(baggage);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateData data, @PathVariable Long id) {
-        return baggageRepository.findById(id).map(user -> {
-            user.updateBaggage(data);
-            return ResponseEntity.ok(user);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    @Transactional
-    public ResponseEntity deleteBaggage(@PathVariable Long id){
-        return baggageRepository.findById(id).map(baggage -> {
-            baggageRepository.delete(baggage);
-            return ResponseEntity.noContent().build();
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateDTO data, @PathVariable String id) {
+        BaggageModel updatedBaggage = baggageService.updateBaggage(data, id);
+        if(updatedBaggage != null) {
+            return ResponseEntity.ok(updatedBaggage);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

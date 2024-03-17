@@ -1,0 +1,14 @@
+package br.com.acmeairlines.domain.baggages.model;
+
+public enum Status {
+    DESPACHADA,
+    EM_ANALISE_DE_SEGURANCA,
+    REPROVADA_PELA_ANALISE_DE_SEGURANCA,
+    APROVADA_PELA_ANALISE_DE_SEGURANCA,
+    NA_AERONAVE,
+    EM_VOO,
+    DESTINO_INCERTO,
+    EXTRAVIADA,
+    AGUARDANDO_RECOLETA,
+    COLETADA
+}

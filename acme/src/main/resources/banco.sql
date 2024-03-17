@@ -3,7 +3,7 @@ CREATE DATABASE acme;
 USE acme;
 
 CREATE TABLE users (
-                       id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                       id VARCHAR(36) PRIMARY KEY NOT NULL,
                        name VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
@@ -15,12 +15,12 @@ CREATE TABLE users (
                        neighborhood VARCHAR(255),
                        number VARCHAR(255),
                        complement VARCHAR(255),
-                       active BOOLEAN NOT NULL DEFAULT false,
+                       active BOOLEAN NOT NULL,
                        role VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE flights (
-                         id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                         id VARCHAR(36) PRIMARY KEY NOT NULL,
                          flight_number VARCHAR(255) NOT NULL,
                          departure_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                          arrival_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -29,14 +29,14 @@ CREATE TABLE flights (
 );
 
 CREATE TABLE baggages (
-                          id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                          user_id BIGINT NOT NULL,
+                          id VARCHAR(36) PRIMARY KEY NOT NULL,
+                          user_id VARCHAR(36) NOT NULL,
                           tag VARCHAR(255) NOT NULL,
                           color VARCHAR(255) NOT NULL,
                           weight DOUBLE NOT NULL,
                           status VARCHAR(255) NOT NULL,
                           last_seen_location VARCHAR(255) NOT NULL,
-                          flight_id BIGINT NOT NULL,
+                          flight_id VARCHAR(36) NOT NULL,
                           FOREIGN KEY (flight_id) REFERENCES flights (id),
                           FOREIGN KEY (user_id) REFERENCES users (id)
 );

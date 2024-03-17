@@ -1,7 +1,13 @@
 package br.com.acmeairlines.controller;
 
-import br.com.acmeairlines.domain.baggages.*;
-import br.com.acmeairlines.domain.users.*;
+import br.com.acmeairlines.domain.baggages.dto.BaggageUpdateDTO;
+import br.com.acmeairlines.domain.baggages.model.BaggageModel;
+import br.com.acmeairlines.domain.users.dto.UserBaggageResponseDTO;
+import br.com.acmeairlines.domain.users.dto.UserDataDTO;
+import br.com.acmeairlines.domain.users.dto.UserUpdateDTO;
+import br.com.acmeairlines.domain.users.model.UserModel;
+import br.com.acmeairlines.domain.users.service.UserService;
+import br.com.acmeairlines.domain.baggages.service.BaggageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,49 +16,45 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
 
     @Autowired
-    private UserRepository repository;
+    private UserService userService;
+
     @Autowired
-    private BaggageRepository baggageRepository;
+    private BaggageService baggageService;
 
     @GetMapping
-    public ResponseEntity<UserAndBaggageResponse> getUser(HttpServletRequest request) {
-        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+    public ResponseEntity<UserBaggageResponseDTO> getUser(HttpServletRequest request) {
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
         if (user != null) {
-            var baggage = baggageRepository.findByUserId(user.id());
-            var response = new UserAndBaggageResponse(user, baggage);
+            List<BaggageModel> baggage = baggageService.findByUserId(user.id());
+            UserBaggageResponseDTO response = new UserBaggageResponseDTO(user, baggage);
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/baggage/{id}")
-    public ResponseEntity getBaggage(HttpServletRequest request, @PathVariable Long id) {
-        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+    public ResponseEntity<BaggageModel> getBaggage(HttpServletRequest request, @PathVariable String id) {
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
         if (user != null){
-            var baggage = baggageRepository.findById(id);
-            if(baggage != null) {
-                List<BaggageModel> userBaggages = baggage.stream().filter(b -> b.getUserId() == user.id()).collect(Collectors.toList());
-                if(!baggage.isEmpty()){
-                    return ResponseEntity.ok(userBaggages);
-                }
+            BaggageModel baggage = baggageService.findById(id);
+            if(baggage != null && baggage.getUserId().equals(user.id())) {
+                return ResponseEntity.ok(baggage);
             }
         }
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/add/baggage")
-    public ResponseEntity addBaggage(@RequestBody @Valid BaggageUpdateRequest updateRequest) {
-        BaggageModel baggage = baggageRepository.findByTag(updateRequest.getTag());
+    public ResponseEntity<BaggageModel> addBaggage(HttpServletRequest request, @RequestBody @Valid BaggageUpdateDTO updateRequest) {
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
+        BaggageModel baggage = baggageService.updateBaggage(updateRequest, user.id());
         if(baggage != null){
-            baggage.updateBaggage(updateRequest.getData());
-            baggageRepository.save(baggage);
             return ResponseEntity.ok(baggage);
         }
         return ResponseEntity.notFound().build();
@@ -60,27 +62,23 @@ public class UserController {
 
     @PutMapping("/update")
     @Transactional
-    public ResponseEntity updateUser(HttpServletRequest request, @RequestBody @Valid UserUpdateData data) {
-        var user = (UserModel) repository.findUserByEmail(request.getRemoteUser());
-        if(user != null) {
-            user.updateUser(data);
-            return ResponseEntity.ok().build();
+    public ResponseEntity<UserDataDTO> updateUser(HttpServletRequest request, @RequestBody @Valid UserUpdateDTO data) {
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
+        UserDataDTO newUser = userService.updateUser(data, user.id());
+        if(newUser != null) {
+            return ResponseEntity.ok(newUser);
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/baggage/{id}")
     @Transactional
-    public ResponseEntity deleteBag(HttpServletRequest request, @PathVariable Long id) {
-        var user = repository.findUserDataRecordByEmail(request.getRemoteUser());
+    public ResponseEntity deleteBag(HttpServletRequest request, @PathVariable String id) {
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
         if(user != null) {
-            var baggage = baggageRepository.findById(id);
-            if(baggage != null) {
-                List<BaggageModel> userBaggages = baggage.stream().filter(b -> b.getUserId() == user.id()).filter(b -> b.getId() == id).collect(Collectors.toList());
-                if(!userBaggages.isEmpty()){
-                    baggageRepository.deleteById(id);
-                    return ResponseEntity.noContent().build();
-                }
+            boolean result = baggageService.deleteBaggage(id, user.id());
+            if(result) {
+                return ResponseEntity.noContent().build();
             }
         }
         return ResponseEntity.notFound().build();
@@ -89,8 +87,8 @@ public class UserController {
     @DeleteMapping
     @Transactional
     public ResponseEntity deleteUser(HttpServletRequest request){
-        var user = (UserModel) repository.findUserByEmail(request.getRemoteUser());
-        repository.delete(user);
+        UserDataDTO user = userService.findByEmail(request.getRemoteUser());
+        userService.deleteUser(user.id());
         return ResponseEntity.noContent().build();
     }
 }
