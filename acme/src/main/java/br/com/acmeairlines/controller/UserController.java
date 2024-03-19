@@ -5,7 +5,6 @@ import br.com.acmeairlines.domain.baggages.model.BaggageModel;
 import br.com.acmeairlines.domain.users.dto.UserBaggageResponseDTO;
 import br.com.acmeairlines.domain.users.dto.UserDataDTO;
 import br.com.acmeairlines.domain.users.dto.UserUpdateDTO;
-import br.com.acmeairlines.domain.users.model.UserModel;
 import br.com.acmeairlines.domain.users.service.UserService;
 import br.com.acmeairlines.domain.baggages.service.BaggageService;
 import jakarta.servlet.http.HttpServletRequest;
