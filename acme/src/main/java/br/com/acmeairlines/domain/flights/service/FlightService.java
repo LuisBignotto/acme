@@ -46,4 +46,10 @@ public class FlightService {
     public Page<FlightModel> findAllFlights(Pageable pages) {
         return repository.findAll(pages);
     }
+
+    public void deleteFlight(String id) {
+        FlightModel flight = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
+        repository.delete(flight);
+    }
 }

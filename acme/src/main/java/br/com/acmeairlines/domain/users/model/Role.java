@@ -2,8 +2,7 @@ package br.com.acmeairlines.domain.users.model;
 
 public enum Role {
     ADMINISTRATOR,
-    BAGGAGE_SUPERVISOR,
-    BAGGAGE_REGISTER,
+    BAGGAGE_MANAGER,
     SUPPORT,
     REGULAR_USER
 }

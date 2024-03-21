@@ -1,6 +1,5 @@
 package br.com.acmeairlines.infra.security;
 
-
 import br.com.acmeairlines.domain.users.model.UserModel;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -63,4 +63,12 @@ public class BaggageService {
     public List<BaggageModel> findBaggagesByFlightId(String flightId) {
         return repository.findByFlightId(flightId);
     }
+
+    public List<BaggageModel> findAllBaggages() {
+        return repository.findAll();
+    }
+    public void deleteBaggage(String id) {
+        BaggageModel baggage = findById(id);
+        repository.delete(baggage);
+    }
 }
