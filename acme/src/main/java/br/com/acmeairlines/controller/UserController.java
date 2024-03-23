@@ -33,14 +33,14 @@ public class UserController {
     private BaggageService baggageService;
 
     @GetMapping("/active")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Page<UserDataDTO>> getActiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
         Page<UserDataDTO> page = userService.findActiveUsers(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/inactive")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Page<UserDataDTO>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
         Page<UserDataDTO> page = userService.findInactiveUsers(pages);
         return ResponseEntity.ok(page);
@@ -83,7 +83,7 @@ public class UserController {
 
     @PostMapping("/register")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<UserDataDTO> registerWorker(@RequestBody @Valid UserRegisterDTO data){
         UserDataDTO user = userService.findByEmail(data.email());
 

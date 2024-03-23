@@ -29,14 +29,14 @@ public class BaggageController {
     private BaggageService baggageService;
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<BaggageModel> getBaggage(@PathVariable String id) {
         BaggageModel baggage = baggageService.findById(id);
         return ResponseEntity.ok(baggage);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<List<BaggageModel>> getAllBaggages() {
         List<BaggageModel> baggages = baggageService.findAllBaggages();
         return ResponseEntity.ok(baggages);
@@ -66,7 +66,7 @@ public class BaggageController {
 
     @PostMapping("/create")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<BaggageModel> createBaggage(@RequestBody @Valid BaggageDTO data) {
         BaggageModel baggage = baggageService.registerBaggage(data);
 
@@ -81,7 +81,7 @@ public class BaggageController {
 
     @PutMapping("/{id}")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<BaggageModel> updateBaggage(@RequestBody @Valid BaggageUpdateDTO data, @PathVariable String id) {
         BaggageModel updatedBaggage = baggageService.updateBaggage(data, id);
 
@@ -94,7 +94,7 @@ public class BaggageController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity deleteBaggage(@PathVariable String id) {
         baggageService.deleteBaggage(id);
         return ResponseEntity.noContent().build();

@@ -32,14 +32,14 @@ public class FlightController {
     private BaggageService baggageService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<Page<FlightModel>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
         Page<FlightModel> page = flightService.findAllFlights(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<List<BaggageModel>> getFlight(@PathVariable String id) {
         List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
         return ResponseEntity.ok(baggages);
@@ -47,7 +47,7 @@ public class FlightController {
 
     @PostMapping("/create")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FlightModel> createFlight(@RequestBody @Valid FlightDataDTO data) {
         FlightModel flight = flightService.createFlight(data);
 
@@ -62,16 +62,20 @@ public class FlightController {
 
     @PutMapping("/{id}")
     @Transactional
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BAGGAGE_MANAGER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<FlightModel> updateFlight(@PathVariable String id, @RequestBody @Valid FlightUpdateDTO data) {
         FlightModel updatedFlight = flightService.updateFlight(data, id);
         return ResponseEntity.ok(updatedFlight);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Void> deleteFlight(@PathVariable String id) {
-        flightService.deleteFlight(id);
-        return ResponseEntity.noContent().build();
+        List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
+        if(baggages.isEmpty()){
+            flightService.deleteFlight(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -37,8 +37,7 @@ public class UserModel implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(this.role.name()));
-        authorities.add(new SimpleGrantedAuthority("REGULAR_USER"));
+        authorities.add(new SimpleGrantedAuthority(role.name()));
         return authorities;
     }
 
