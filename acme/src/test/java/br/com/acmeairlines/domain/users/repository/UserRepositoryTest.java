@@ -50,7 +50,6 @@ class UserRepositoryTest {
         assertEquals(Role.REGULAR_USER, foundUser.getRole());
     }
 
-
     @Test
     void findByEmail_NonExistingEmail_ReturnsNull() {
         UserModel foundUser = userRepository.findByEmail("nonexistent@example.com");
