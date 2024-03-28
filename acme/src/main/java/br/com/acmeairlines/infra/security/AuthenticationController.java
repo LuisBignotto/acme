@@ -7,6 +7,7 @@ import br.com.acmeairlines.domain.users.dto.UserRegisterDTO;
 import br.com.acmeairlines.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,10 @@ public class AuthenticationController {
 
         var token = tokenService.generateToken((UserModel) auth.getPrincipal());
 
+        if(token == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
@@ -44,6 +49,10 @@ public class AuthenticationController {
     @Transactional
     public ResponseEntity register(@RequestBody @Valid UserRegisterDTO data){
         UserModel newUser = userService.createUser(data);
+
+        if(newUser == null){
+            return ResponseEntity.internalServerError().build();
+        }
 
         return ResponseEntity.ok().build();
     }
