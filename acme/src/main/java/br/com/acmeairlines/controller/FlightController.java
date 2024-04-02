@@ -2,6 +2,7 @@ package br.com.acmeairlines.controller;
 
 import br.com.acmeairlines.domain.baggages.model.BaggageModel;
 import br.com.acmeairlines.domain.baggages.service.BaggageService;
+import br.com.acmeairlines.domain.flights.dto.FlightBaggageResponseDTO;
 import br.com.acmeairlines.domain.flights.dto.FlightDataDTO;
 import br.com.acmeairlines.domain.flights.dto.FlightUpdateDTO;
 import br.com.acmeairlines.domain.flights.model.FlightModel;
@@ -40,9 +41,11 @@ public class FlightController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
-    public ResponseEntity<List<BaggageModel>> getFlight(@PathVariable String id) {
+    public ResponseEntity<FlightBaggageResponseDTO> getFlight(@PathVariable String id) {
+        FlightDataDTO data = flightService.getFlight(id);
         List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
-        return ResponseEntity.ok(baggages);
+        FlightBaggageResponseDTO responseDTO = new FlightBaggageResponseDTO(data, baggages);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/create")

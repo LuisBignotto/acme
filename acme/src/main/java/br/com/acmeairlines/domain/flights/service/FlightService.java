@@ -1,5 +1,6 @@
 package br.com.acmeairlines.domain.flights.service;
 
+import br.com.acmeairlines.domain.flights.dto.FlightBaggageResponseDTO;
 import br.com.acmeairlines.domain.flights.dto.FlightDataDTO;
 import br.com.acmeairlines.domain.flights.dto.FlightUpdateDTO;
 import br.com.acmeairlines.domain.flights.model.FlightModel;
@@ -41,6 +42,12 @@ public class FlightService {
         }
 
         return repository.save(flight);
+    }
+
+    public FlightDataDTO getFlight(String id){
+        FlightModel flight = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
+        return new FlightDataDTO(flight);
     }
 
     public Page<FlightModel> findAllFlights(Pageable pages) {
