@@ -4,6 +4,8 @@ import br.com.acmeairlines.domain.baggages.dto.BaggageDTO;
 import br.com.acmeairlines.domain.baggages.dto.BaggageUpdateDTO;
 import br.com.acmeairlines.domain.baggages.model.BaggageModel;
 import br.com.acmeairlines.domain.baggages.repository.BaggageRepository;
+import br.com.acmeairlines.domain.users.model.UserModel;
+import br.com.acmeairlines.domain.users.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,16 @@ public class BaggageService {
     @Autowired
     private BaggageRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public BaggageModel registerBaggage(BaggageDTO data){
-        BaggageModel baggage = new BaggageModel(UUID.randomUUID().toString(), data.userId(), data.tag(), data.color(), data.weight(), data.status(), data.lastSeenLocation(), data.flightId());
+        UserModel user = userRepository.findByEmail(data.userEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("User not found with email: " + data.userEmail());
+        }
+
+        BaggageModel baggage = new BaggageModel(UUID.randomUUID().toString(), user.getId(), data.tag(), data.color(), data.weight(), data.status(), data.lastSeenLocation(), data.flightId());
         return repository.save(baggage);
     }
 
@@ -51,9 +61,9 @@ public class BaggageService {
                 .orElseThrow(() -> new IllegalArgumentException("None baggage were found using id: " + id));
     }
 
-    public boolean deleteBaggage(String id, String userId){
+    public boolean deleteBaggage(String id, String userEmail){
         BaggageModel baggage = findById(id);
-        if(baggage != null && userId.equalsIgnoreCase(baggage.getUserId())){
+        if(baggage != null && userEmail.equalsIgnoreCase(userRepository.findByEmail(userEmail).getId())){
             repository.deleteById(id);
             return true;
         }
