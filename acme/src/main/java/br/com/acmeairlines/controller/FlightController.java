@@ -7,7 +7,6 @@ import br.com.acmeairlines.domain.flights.dto.FlightDataDTO;
 import br.com.acmeairlines.domain.flights.dto.FlightUpdateDTO;
 import br.com.acmeairlines.domain.flights.model.FlightModel;
 import br.com.acmeairlines.domain.flights.service.FlightService;
-import br.com.acmeairlines.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +43,15 @@ public class FlightController {
     public ResponseEntity<FlightBaggageResponseDTO> getFlight(@PathVariable String id) {
         FlightDataDTO data = flightService.getFlight(id);
         List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
+        FlightBaggageResponseDTO responseDTO = new FlightBaggageResponseDTO(data, baggages);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/tag/{tag}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
+    public ResponseEntity<FlightBaggageResponseDTO> getFlightByTag(@PathVariable String tag) {
+        FlightDataDTO data = flightService.getFlightByTag(tag);
+        List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(data.id());
         FlightBaggageResponseDTO responseDTO = new FlightBaggageResponseDTO(data, baggages);
         return ResponseEntity.ok(responseDTO);
     }
