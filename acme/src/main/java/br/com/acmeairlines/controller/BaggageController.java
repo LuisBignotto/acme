@@ -35,6 +35,20 @@ public class BaggageController {
         return ResponseEntity.ok(baggage);
     }
 
+    @GetMapping("/tag/{tag}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
+    public ResponseEntity<BaggageModel> getBaggageByTag(@PathVariable String tag) {
+        BaggageModel baggage = baggageService.findByTag(tag);
+        return ResponseEntity.ok(baggage);
+    }
+
+    @GetMapping("/email/{email}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
+    public ResponseEntity<List<BaggageModel>> getBaggageByEmail(@PathVariable String email) {
+        List<BaggageModel> baggages = baggageService.findByEmail(email);
+        return ResponseEntity.ok(baggages);
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<List<BaggageModel>> getAllBaggages() {

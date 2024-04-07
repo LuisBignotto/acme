@@ -46,6 +46,13 @@ public class UserController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{email}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<UserDataDTO> getUserByEmail(@PathVariable String email) {
+        UserDataDTO user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
     @GetMapping
     public ResponseEntity<UserBaggageResponseDTO> getUser(HttpServletRequest request) {
         UserDataDTO user = userService.findByEmail(request.getRemoteUser());

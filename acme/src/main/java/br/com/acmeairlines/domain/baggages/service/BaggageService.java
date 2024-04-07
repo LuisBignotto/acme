@@ -61,6 +61,15 @@ public class BaggageService {
                 .orElseThrow(() -> new IllegalArgumentException("None baggage were found using id: " + id));
     }
 
+    public BaggageModel findByTag(String tag) {
+        return repository.findByTag(tag);
+    }
+
+    public List<BaggageModel> findByEmail(String email) {
+        UserModel user = userRepository.findByEmail(email);
+        return findByUserId(user.getId());
+    }
+
     public boolean deleteBaggage(String id, String userEmail){
         BaggageModel baggage = findById(id);
         if(baggage != null && userEmail.equalsIgnoreCase(userRepository.findByEmail(userEmail).getId())){
