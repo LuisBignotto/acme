@@ -36,16 +36,20 @@ public class UserService {
         if (data.name() != null) {
             user.setName(data.name());
         }
+
         if (data.email() != null) {
             user.setEmail(data.email());
         }
+
         if (data.password() != null) {
             String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
             user.setPassword(encryptedPassword);
         }
+
         if (data.phone() != null) {
             user.setPhone(data.phone());
         }
+
         if (data.address() != null) {
             if (user.getAddress() == null) {
                 user.setAddress(new Address(data.address()));
@@ -53,6 +57,11 @@ public class UserService {
                 user.getAddress().updateAddress(data.address());
             }
         }
+
+        if(data.role() != null){
+            user.setRole(data.role());
+        }
+
         UserModel savedUser = repository.save(user);
 
         return new UserDataDTO(savedUser);
