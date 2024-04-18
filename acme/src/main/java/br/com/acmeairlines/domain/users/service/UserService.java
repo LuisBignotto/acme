@@ -26,7 +26,7 @@ public class UserService {
             throw new IllegalArgumentException("Email already in use.");
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserModel newUser = new UserModel(UUID.randomUUID().toString(), data.name(), data.email(), encryptedPassword, null, data.active(), null, data.role());
+        UserModel newUser = new UserModel(UUID.randomUUID().toString(), data.name(), data.email(), data.cpf(), encryptedPassword, null, data.active(), null, data.role());
         return repository.save(newUser);
     }
 
