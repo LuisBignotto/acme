@@ -26,6 +26,7 @@ public class UserModel implements UserDetails {
     private String id;
     private String name;
     private String email;
+    private String cpf;
     private String password;
     private String phone;
     private Boolean active;
