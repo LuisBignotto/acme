@@ -32,6 +32,14 @@ public class UserService {
 
     public UserDataDTO updateUser(@Valid UserUpdateDTO data, String userId) {
         UserModel user = repository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        if (data.currentPassword() != null) {
+            boolean isCurrentPasswordValid = passwordEncoder.matches(data.currentPassword(), user.getPassword());
+            if (!isCurrentPasswordValid) {
+                throw new IllegalArgumentException("Current password is incorrect.");
+            }
+        }
 
         if (data.name() != null) {
             user.setName(data.name());
@@ -42,7 +50,7 @@ public class UserService {
         }
 
         if (data.password() != null) {
-            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            String encryptedPassword = passwordEncoder.encode(data.password());
             user.setPassword(encryptedPassword);
         }
 
@@ -58,7 +66,7 @@ public class UserService {
             }
         }
 
-        if(data.role() != null){
+        if (data.role() != null) {
             user.setRole(data.role());
         }
 
@@ -83,7 +91,7 @@ public class UserService {
         return null;
     }
 
-    public void deleteUser(String id){
+    public void deleteUser(String id) {
         repository.deleteById(id);
     }
 
