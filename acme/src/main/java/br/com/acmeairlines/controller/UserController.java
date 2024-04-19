@@ -92,9 +92,10 @@ public class UserController {
     @Transactional
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<UserDataDTO> registerWorker(@RequestBody @Valid UserRegisterDTO data){
-        UserDataDTO user = userService.findByEmail(data.email());
+        UserDataDTO email = userService.findByEmail(data.email());
+        UserDataDTO cpf = userService.findByCpf(data.cpf());
 
-        if(user != null) {
+        if(email != null && cpf != null) {
             return ResponseEntity.badRequest().build();
         }
 

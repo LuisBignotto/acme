@@ -75,6 +75,14 @@ public class UserService {
         return null;
     }
 
+    public UserDataDTO findByCpf(String cpf) {
+        UserModel user = repository.findByCpf(cpf);
+        if (user != null) {
+            return new UserDataDTO(user);
+        }
+        return null;
+    }
+
     public void deleteUser(String id){
         repository.deleteById(id);
     }

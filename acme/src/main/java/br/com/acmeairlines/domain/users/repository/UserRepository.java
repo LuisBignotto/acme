@@ -9,4 +9,6 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
     Page<UserModel> findByActive(Boolean active, Pageable pageable);
 
     UserModel findByEmail(String email);
+
+    UserModel findByCpf(String cpf);
 }
