@@ -25,6 +25,15 @@ public class UserService {
         if (repository.findByEmail(data.email()) != null) {
             throw new IllegalArgumentException("Email already in use.");
         }
+
+        if (repository.findByCpf(data.cpf()) != null) {
+            throw new IllegalArgumentException("CPF already in use.");
+        }
+
+        if(data.password().length() < 8){
+            throw new IllegalArgumentException("Password too short.");
+        }
+
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         UserModel newUser = new UserModel(UUID.randomUUID().toString(), data.name(), data.email(), data.cpf(), encryptedPassword, null, data.active(), null, data.role());
         return repository.save(newUser);
