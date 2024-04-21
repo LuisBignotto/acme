@@ -34,14 +34,14 @@ public class UserController {
 
     @GetMapping("/active")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<Page<UserDataDTO>> getActiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
+    public ResponseEntity<Page<UserDataDTO>> getActiveUsers(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
         Page<UserDataDTO> page = userService.findActiveUsers(pages);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/inactive")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<Page<UserDataDTO>> getInactiveUsers(@PageableDefault(size = 10, sort = {"name"}) Pageable pages) {
+    public ResponseEntity<Page<UserDataDTO>> getInactiveUsers(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
         Page<UserDataDTO> page = userService.findInactiveUsers(pages);
         return ResponseEntity.ok(page);
     }
