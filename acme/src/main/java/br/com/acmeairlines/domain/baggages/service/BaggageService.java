@@ -25,12 +25,24 @@ public class BaggageService {
 
     public BaggageModel registerBaggage(BaggageDTO data){
         UserModel user = userRepository.findByEmail(data.userEmail());
+
         if (user == null) {
             throw new IllegalArgumentException("User not found with email: " + data.userEmail());
         }
 
-        BaggageModel baggage = new BaggageModel(UUID.randomUUID().toString(), user.getId(), data.tag(), data.color(), data.weight(), data.status(), data.lastSeenLocation(), data.flightId());
-        return repository.save(baggage);
+        List<BaggageModel> userBaggages = findByUserId(user.getId());
+
+        if(userBaggages.size() == 4){
+            throw new IllegalArgumentException("User cannot have more baggages.");
+        }
+
+        List<BaggageModel> allFlightBaggages = findBaggagesByFlightId(data.flightId());
+
+        if(allFlightBaggages.size() == 40){
+            throw new IllegalArgumentException("Flight cannot have more baggages.");
+        }
+
+        return repository.save(new BaggageModel(UUID.randomUUID().toString(), user.getId(), data.tag(), data.color(), data.weight(), data.status(), data.lastSeenLocation(), data.flightId()));
     }
 
     public BaggageModel updateBaggage(@Valid BaggageUpdateDTO data, String id) {
@@ -52,13 +64,11 @@ public class BaggageService {
     }
 
     public List<BaggageModel> findByUserId(String id){
-        List<BaggageModel> baggages = repository.findByUserId(id);
-        return baggages;
+        return repository.findByUserId(id);
     }
 
     public BaggageModel findById(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("None baggage were found using id: " + id));
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("None baggage were found using id: " + id));
     }
 
     public BaggageModel findByTag(String tag) {
@@ -66,8 +76,7 @@ public class BaggageService {
     }
 
     public List<BaggageModel> findByEmail(String email) {
-        UserModel user = userRepository.findByEmail(email);
-        return findByUserId(user.getId());
+        return findByUserId(userRepository.findByEmail(email).getId());
     }
 
     public boolean deleteBaggage(String id, String userEmail){
@@ -87,7 +96,6 @@ public class BaggageService {
         return repository.findAll();
     }
     public void deleteBaggage(String id) {
-        BaggageModel baggage = findById(id);
-        repository.delete(baggage);
+        repository.delete(findById(id));
     }
 }
