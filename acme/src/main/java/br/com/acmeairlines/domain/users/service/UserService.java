@@ -102,6 +102,7 @@ public class UserService {
     }
 
     public void deleteUser(String id) {
+        repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found."));
         repository.deleteById(id);
     }
 
