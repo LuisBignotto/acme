@@ -35,22 +35,19 @@ public class UserController {
     @GetMapping("/active")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Page<UserDataDTO>> getActiveUsers(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
-        Page<UserDataDTO> page = userService.findActiveUsers(pages);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(userService.findActiveUsers(pages));
     }
 
     @GetMapping("/inactive")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Page<UserDataDTO>> getInactiveUsers(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
-        Page<UserDataDTO> page = userService.findInactiveUsers(pages);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(userService.findInactiveUsers(pages));
     }
 
     @GetMapping("/{email}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<UserDataDTO> getUserByEmail(@PathVariable String email) {
-        UserDataDTO user = userService.findByEmail(email);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.findByEmail(email));
     }
 
     @GetMapping
@@ -62,9 +59,8 @@ public class UserController {
         }
 
         List<BaggageModel> baggage = baggageService.findByUserId(user.id());
-        UserBaggageResponseDTO response = new UserBaggageResponseDTO(user, baggage);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new UserBaggageResponseDTO(user, baggage));
     }
 
     @PutMapping("/update")
