@@ -34,8 +34,7 @@ public class FlightController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<Page<FlightModel>> getFlights(@PageableDefault(size = 10, sort = {"id"}) Pageable pages) {
-        Page<FlightModel> page = flightService.findAllFlights(pages);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(flightService.findAllFlights(pages));
     }
 
     @GetMapping("/{id}")
@@ -43,8 +42,7 @@ public class FlightController {
     public ResponseEntity<FlightBaggageResponseDTO> getFlight(@PathVariable String id) {
         FlightDataDTO data = flightService.getFlight(id);
         List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(id);
-        FlightBaggageResponseDTO responseDTO = new FlightBaggageResponseDTO(data, baggages);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(new FlightBaggageResponseDTO(data, baggages));
     }
 
     @GetMapping("/tag/{tag}")
@@ -52,8 +50,7 @@ public class FlightController {
     public ResponseEntity<FlightBaggageResponseDTO> getFlightByTag(@PathVariable String tag) {
         FlightDataDTO data = flightService.getFlightByTag(tag);
         List<BaggageModel> baggages = baggageService.findBaggagesByFlightId(data.id());
-        FlightBaggageResponseDTO responseDTO = new FlightBaggageResponseDTO(data, baggages);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(new FlightBaggageResponseDTO(data, baggages));
     }
 
     @PostMapping("/create")
@@ -75,8 +72,7 @@ public class FlightController {
     @Transactional
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('BAGGAGE_MANAGER')")
     public ResponseEntity<FlightModel> updateFlight(@PathVariable String id, @RequestBody @Valid FlightUpdateDTO data) {
-        FlightModel updatedFlight = flightService.updateFlight(data, id);
-        return ResponseEntity.ok(updatedFlight);
+        return ResponseEntity.ok(flightService.updateFlight(data, id));
     }
 
     @DeleteMapping("/{id}")

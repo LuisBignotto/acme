@@ -19,39 +19,39 @@ public class FlightService {
     private FlightRepository repository;
 
     public FlightModel createFlight(@Valid FlightDataDTO data) {
-        FlightModel newFlight = new FlightModel(UUID.randomUUID().toString(), data.flightNumber(), data.departureDate(), data.arrivalDate(), data.departureAirport(), data.arrivalAirport());
-        return repository.save(newFlight);
+        return repository.save(new FlightModel(UUID.randomUUID().toString(), data.flightNumber(), data.departureDate(), data.arrivalDate(), data.departureAirport(), data.arrivalAirport()));
     }
 
     public FlightModel updateFlight(@Valid FlightUpdateDTO data, String id) {
-        FlightModel flight = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
+        FlightModel flight = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
 
         if (data.departureDate() != null) {
             flight.setDepartureDate(data.departureDate());
         }
+
         if (data.arrivalDate() != null) {
             flight.setArrivalDate(data.arrivalDate());
         }
+
         if (data.departureAirport() != null) {
             flight.setDepartureAirport(data.departureAirport());
         }
+
         if (data.arrivalAirport() != null) {
-            flight.setArrivalAirport(data.arrivalAirport());
+            if (!data.arrivalAirport().equalsIgnoreCase(flight.getArrivalAirport()) || data.departureAirport() != null && !data.departureAirport().equalsIgnoreCase(data.arrivalAirport())) {
+                flight.setArrivalAirport(data.arrivalAirport());
+            }
         }
 
         return repository.save(flight);
     }
 
-    public FlightDataDTO getFlight(String id){
-        FlightModel flight = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
-        return new FlightDataDTO(flight);
+    public FlightDataDTO getFlight(String id) {
+        return new FlightDataDTO(repository.findById(id).orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id)));
     }
 
-    public FlightDataDTO getFlightByTag(String tag){
-        FlightModel flight = repository.findByFlightNumber(tag);
-        return new FlightDataDTO(flight);
+    public FlightDataDTO getFlightByTag(String tag) {
+        return new FlightDataDTO(repository.findByFlightNumber(tag));
     }
 
     public Page<FlightModel> findAllFlights(Pageable pages) {
@@ -59,8 +59,7 @@ public class FlightService {
     }
 
     public void deleteFlight(String id) {
-        FlightModel flight = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
+        FlightModel flight = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("None flight were found using id: " + id));
         repository.delete(flight);
     }
 }
