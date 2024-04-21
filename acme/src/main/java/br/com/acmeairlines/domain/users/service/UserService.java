@@ -30,7 +30,7 @@ public class UserService {
             throw new IllegalArgumentException("CPF already in use.");
         }
 
-        if(data.password().length() < 8){
+        if (data.password().length() < 8) {
             throw new IllegalArgumentException("Password too short.");
         }
 
@@ -41,6 +41,7 @@ public class UserService {
 
     public UserDataDTO updateUser(@Valid UserUpdateDTO data, String userId) {
         UserModel user = repository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         if (data.currentPassword() != null) {
@@ -58,7 +59,7 @@ public class UserService {
             user.setEmail(data.email());
         }
 
-        if (data.password() != null) {
+        if (data.password() != null && data.password().length() > 8) {
             String encryptedPassword = passwordEncoder.encode(data.password());
             user.setPassword(encryptedPassword);
         }
