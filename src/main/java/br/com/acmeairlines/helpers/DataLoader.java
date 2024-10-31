@@ -194,7 +194,7 @@ public class DataLoader implements CommandLineRunner {
             gabriela.setRole(baggageManagerRole);
             userRepository.save(gabriela);
 
-            String[] nomes = {"João Silva", "Maria Oliveira", "Pedro Souza", "Ana Lima", "Carlos Pereira",
+            String[] nomes = {"Joao Silva", "Maria Oliveira", "Pedro Souza", "Ana Lima", "Carlos Pereira",
                     "Fernanda Costa", "Rafael Alves", "Juliana Santos", "Lucas Batista", "Paula Moreira"};
 
             String[] cores = {"Azul", "Verde", "Preto", "Vermelho", "Amarelo", "Branco", "Cinza", "Rosa", "Laranja", "Roxo"};
