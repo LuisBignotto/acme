@@ -49,17 +49,6 @@ public class UserController {
         return ResponseEntity.ok(new TokenDTO(((UserModel) auth.getPrincipal()).getId(), token, String.valueOf(roleId)));
     }
 
-    @GetMapping("/validate")
-    public boolean validateToken(@RequestHeader("Authorization") String token) {
-        Map<String, Object> tokenResponse = userService.validateToken(token);
-        return !tokenResponse.containsKey("error");
-    }
-
-    @GetMapping("/check")
-    public Map<String, Object> checkToken(@RequestHeader("Authorization") String token) {
-        return userService.validateToken(token);
-    }
-
     @GetMapping
     public ResponseEntity<Page<UserDTO>> findAllUsers(Pageable pageable) {
         Page<UserDTO> UserDTOs = userService.findAllUsers(pageable);
