@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/user-ms/users/cpf/{cpf}").hasAnyRole("ADMIN", "SUPPORT")
                         .requestMatchers(HttpMethod.GET, "/user-ms/users/search").hasAnyRole("ADMIN", "SUPPORT")
                         .requestMatchers(HttpMethod.POST, "/user-ms/users/{userId}/role/{roleName}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/user-ms/users/{id}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/user-ms/users/{id}").hasAnyRole("ADMIN", "USER", "BAGGAGE_MANAGER", "SUPPORT")
                         .requestMatchers(HttpMethod.DELETE, "/user-ms/users/{id}").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/baggage-ms/baggages").hasAnyRole("ADMIN","BAGGAGE_MANAGER","SUPPORT")
